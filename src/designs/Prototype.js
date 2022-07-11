@@ -1,17 +1,15 @@
-const express = require("express");
+class Prototype {
 
-class Server {
-
-    constructor(port) {
-        this._port = port;
-        this.express = express(); 
+    constructor(name) {
+        this.name = name;
     }
 
-    listen() {
-        this.express.listen(this._port, () => {
-            console.log(`Listening to requests on http://localhost:${this._port}`);
-        });
+    compare(prot1, prot2) {
+        if(prot1 !== prot2){return 'diferentes'}else{ return 'iguais'}
+    }
+    clone(newName){
+        return new Prototype(newName);
     }
 }
 
-module.exports = Server;
+module.exports = Prototype;

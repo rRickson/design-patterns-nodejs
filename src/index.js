@@ -1,7 +1,8 @@
 
 const SingletonDB = require('./designs/Singleton')
 const portChecker = require('./designs/ChainOfResp')
-const Server = require('./designs/Prototype')
+const Server = require('./designs/App')
+const Prototype = require('./designs/Prototype')
 
 const server = new Server(8080);
 server.listen();
@@ -13,12 +14,15 @@ server.express.get("/init", (req, res) => {
      */
     try {
         portChecker.check({});
+        const name = new Prototype('Jane');
+        const newName = name.clone('John');
+        const protInstance = newName.listen();
         const initType = SingletonDB.init(3000);
         const singletonIsntance = SingletonDB.getInstance().status();
         if (typeof initType === 'string') {
-            res.status(200).send(`SINGLETON ALLREADY CREATED! ${singletonIsntance}`);
+            res.status(200).send(`SINGLETON ALLREADY CREATED! ${singletonIsntance}, prot Instance ${protInstance}`);
         } else {
-            res.status(200).send(`SINGLETON CREATED!${singletonIsntance}`);
+            res.status(200).send(`SINGLETON CREATED!${singletonIsntance}, prot Instance ${protInstance}`);
         }
 
     } catch (e) {
