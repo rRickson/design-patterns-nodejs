@@ -22,8 +22,7 @@ server.express.get("/init", (req, res) => {
         }
 
     } catch (e) {
-        console.log(e)
-        res.status(401).send(`ERROR ON PORT CHECK`);
+        res.status(401).send(e.toString());
 
     }
 
