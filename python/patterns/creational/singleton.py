@@ -1,6 +1,6 @@
-
-from ast import IsNot
-
+import threading
+import logging
+import time
 
 class SingletonMeta(type):
 
@@ -21,12 +21,22 @@ class Singleton(metaclass=SingletonMeta):
         if a != b:
             return 'A diff B'
 
+def createThread(name):
+    print("Thread %s: starting", name)
+    s1 = Singleton()
+    print("Thread %s: finishing", name)
+    return s1
+
+# python3 -u "/Users/ricksonvasconcelos/Desktop/Arquitetura/python/patterns/creational/singleton.py"
 
 if __name__ == "__main__":
 
-    s1 = Singleton()
-    s2 = Singleton()
-
+    s1 = threading.Thread(target=createThread, args=(1,)).start()
+    s2 = threading.Thread(target=createThread, args=(2,)).start()
+    # threading.Thread().start()
+    # threading.Thread().start()
+    # s1 = Singleton();
+    # s2 = Singleton()
     if id(s1) == id(s2):
         print("Singleton works, both variables contain the same instance.")
     else:
