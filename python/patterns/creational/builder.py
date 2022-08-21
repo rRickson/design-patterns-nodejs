@@ -1,117 +1,44 @@
-from __future__ import annotations
-from abc import ABC, abstractmethod
-from typing import Any
+class Computer:
+    def __init__(self, serial_number):
+        self.serial = serial_number
+        self.memory = None
+        self.hdd = None
+        self.gpu = None
 
+    def __str__(self):
+        info = (f'Memory: {self.memory}GB',
+                f'Hard Disk: {self.hdd}GB',
+                f'Graphics Card: {self.gpu}')
+        return '\n'.join(info)
 
-class MessageBuilder(ABC):
+class ComputerBuilder:
+    def __init__(self):
+        self.computer = Computer('AG23385193')
+    def configure_memory(self, amount):
+        self.computer.memory = amount
+    def configure_hdd(self, amount):
+        self.computer.hdd = amount
+    def configure_gpu(self, gpu_model):
+        self.computer.gpu = gpu_model
 
-    @property
-    @abstractmethod
-    def message(self) -> None:
-        pass
-
-    @abstractmethod
-    def produce_part_a(self) -> None:
-        pass
-
-    @abstractmethod
-    def produce_part_b(self) -> None:
-        pass
-
-    @abstractmethod
-    def produce_part_c(self) -> None:
-        pass
-
-
-class ConcreteBuilder1(MessageBuilder):
-
-    def __init__(self) -> None:
-        self.reset()
-
-    def reset(self) -> None:
-        self._message = Message1()
-
-    @property
-    def message(self) -> Message1:
-    
-        message = self._message
-        self.reset()
-        return message
-
-    def produce_part_a(self) -> None:
-        self.message.add("PartA1")
-
-    def produce_part_b(self) -> None:
-        self.message.add("PartB1")
-
-    def produce_part_c(self) -> None:
-        self.message.add("PartC1")
-
-
-class Message1():
-
-    def __init__(self) -> None:
-        self.parts = []
-
-    def add(self, part: Any) -> None:
-        self.parts.append(part)
-
-    def list_parts(self) -> None:
-        print(f"Messages parts: {', '.join(self.parts)}", end="")
-
-
-class User:
-
-    def __init__(self) -> None:
-        self._builder = None
+class HardwareEngineer:
+    def __init__(self):
+        self.builder = None
+    def construct_computer(self, memory, hdd, gpu):
+        self.builder = ComputerBuilder()
+        self.builder.configure_memory(memory)
+        self.builder.configure_hdd(hdd)
+        self.builder.configure_gpu(gpu)
 
     @property
-    def builder(self) -> MessageBuilder:
-        return self._builder
+    def computer(self):
+        return self.builder.computer
 
-    @builder.setter
-    def builder(self, builder: MessageBuilder) -> None:
-        self._builder = builder
+def main():
+    engineer = HardwareEngineer()
+    engineer.construct_computer(hdd=500,memory=8,gpu='GeForce GTX 650 Ti')
+    computer = engineer.computer
+    print(computer)
 
-
-    def build_minimal_viable_message(self) -> None:
-        self.builder.produce_part_a()
-
-    def build_full_featured_message(self) -> None:
-        self.builder.produce_part_a()
-        self.builder.produce_part_b()
-        self.builder.produce_part_c()
-
-
-if __name__ == "__main__":
-
-    user = User()
-    builder = ConcreteBuilder1()
-    user.builder = builder
-
-    print("Standard basic message: ")
-    user.build_minimal_viable_message()
-    builder.message.list_parts()
-
-    print("\n")
-
-    print("Standard full featured message: ")
-    user.build_full_featured_message()
-    builder.message.list_parts()
-
-    print("\n")
-
-    # Remember, the Builder pattern can be used without a Director class.
-    print("Custom message: ")
-    builder.produce_part_a()
-    builder.produce_part_b()
-    builder.message.list_parts()
-
-
-
-
-
-
-
- # Builder in this case will not be useful since we will have only one type of class "Message".
- # Use the Builder pattern when you want your code to be able to create different representations of some product (for example, stone and wooden houses).
+if __name__ == '__main__':
+    main()
