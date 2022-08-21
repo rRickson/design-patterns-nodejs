@@ -1,57 +1,47 @@
-from __future__ import annotations
-from abc import ABC, abstractmethod
+from builder import HardwareEngineer
 
 
-class MessageFactory(ABC):
-  
-    @abstractmethod
-    def factory_method(self):
-        message = 'Test'
-        return message
+MINI14 = '1.4GHz Mac mini'
+MINI15 = '1.5GHz Mac mini'
+class AppleFactory:
+    class MacMini14:
+        def __init__(self):
+            self.memory = 4  # in gigabytes
+            self.hdd = 500  # in gigabytes
+            self.gpu = 'Intel HD Graphics 5000'
 
-    def some_operation(self) -> str:
-        message = self.factory_method()
+        def __str__(self):
+            info = (f'Model: {MINI14}',
+                    f'Memory: {self.memory}GB',
+                    f'Hard Disk: {self.hdd}GB',
+                    f'Graphics Card: {self.gpu}')
+            return '\n'.join(info)
 
-        result = f"Message is: {message.operation()}"
+    class CustomComputer:
+        def __init__(self):
+            self.memory = 10  # in gigabytes
+            self.hdd = 5000  # in gigabytes
+            self.gpu = 'Intel HD Graphics 6000'
 
-        return result
+        def main(self):
+            engineer = HardwareEngineer()
+            engineer.construct_computer(hdd=self.hdd,memory=self.memory,gpu=self.gpu)
+            computer = engineer.computer
+            return computer
 
-class MessageCreator(MessageFactory):
-
-    def factory_method(self) -> Message:
-        return MessageCreation()
-
-class Message(ABC):
-
-    @abstractmethod
-    def operation(self) -> str:
-        pass
-
-    @abstractmethod
-    def check(self)-> bool:
-        pass
-
-
-class MessageCreation(Message):
-
-    def operation(self) -> str:
-        return "{Result of the send message}"
-    
-    def check(self) -> bool:
-        print('values compared')
-        return True
-
-def client_code(creator: MessageFactory) -> None:
-
-    print(f"Client: I'm not aware of the creator's class, but it still works.\n"
-          f"{creator.some_operation()}", end="")
+    def build_computer(self, model):
+        if model == MINI14:
+            return self.MacMini14()
+        else:
+            return self.CustomComputer()
 
 
-if __name__ == "__main__":
-    print("App: Launched with the ConcreteCreator1.")
-    client_code(MessageCreator())
-    print("\n")
-
-    # Probable we will not se this because we know what we want to return.
-    ## Use the Factory Method when you want to provide users of your library or framework with a way to extend its internal components.
-    ## Use the Factory Method when you don’t know beforehand the exact types and dependencies of the objects your code should work with.
+if __name__ == '__main__':
+    factory = AppleFactory()
+    mac_mini = factory.build_computer(MINI14)
+    mac_mini1 = factory.build_computer(MINI15).main()
+    print(mac_mini)
+    print('\n')
+    print(mac_mini1)
+    print('\n')
+#  Exemplos de uso: O padrão Factory Method é amplamente utilizado no código Python. É muito útil quando você precisa fornecer um alto nível de flexibilidade para seu código.
